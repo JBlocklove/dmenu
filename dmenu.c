@@ -899,6 +899,22 @@ readxresources(void) {
 			colors[SchemeSel][ColFg] = strdup(xval.addr);
 		else
 			colors[SchemeSel][ColFg] = strdup(colors[SchemeSel][ColFg]);
+		if (XrmGetResource(xdb, "dmenu.hibackground", "*", &type, &xval)){
+			colors[SchemeSelHighlight][ColBg] = strdup(xval.addr);
+			colors[SchemeNormHighlight][ColBg] = strdup(xval.addr);
+		}
+		else{
+			colors[SchemeSelHighlight][ColBg] = strdup(colors[SchemeSelHighlight][ColBg]);
+			colors[SchemeNormHighlight][ColBg] = strdup(colors[SchemeNormHighlight][ColBg]);
+		}
+		if (XrmGetResource(xdb, "dmenu.hiforeground", "*", &type, &xval)){
+			colors[SchemeSelHighlight][ColFg] = strdup(xval.addr);
+			colors[SchemeNormHighlight][ColFg] = strdup(xval.addr);
+		}
+		else{
+			colors[SchemeSelHighlight][ColFg] = strdup(colors[SchemeSelHighlight][ColFg]);
+			colors[SchemeNormHighlight][ColFg] = strdup(colors[SchemeNormHighlight][ColFg]);
+		}
 
 		XrmDestroyDatabase(xdb);
 	}
