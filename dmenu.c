@@ -30,7 +30,7 @@
 #define NUMBERSBUFSIZE        (NUMBERSMAXDIGITS * 2) + 1
 
 /* enums */
-enum { SchemeNorm, SchemeSel, SchemeOut, SchemeNormHighlight, SchemeSelHighlight, SchemeLast }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeOut, SchemeNormHighlight, SchemeSelHighlight, SchemeBorder, SchemeLast }; /* color schemes */
 
 struct item {
 	char *text;
@@ -865,9 +865,10 @@ setup(void)
 	swa.override_redirect = True;
 	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, 0,
+	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
 	                    CopyFromParent, CopyFromParent, CopyFromParent,
 	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+	XSetWindowBorder(dpy, win, scheme[SchemeBorder][ColBg].pixel);
 	XSetClassHint(dpy, win, &ch);
 
 
@@ -931,6 +932,10 @@ readxresources(void) {
 			colors[SchemeSel][ColFg] = strdup(xval.addr);
 		else
 			colors[SchemeSel][ColFg] = strdup(colors[SchemeSel][ColFg]);
+		if (XrmGetResource(xdb, "dmenu.border", "*", &type, &xval))
+			colors[SchemeBorder][ColBg] = strdup(xval.addr);
+		else
+			colors[SchemeBorder][ColBg] = strdup(colors[SchemeNorm][ColBg]);
 		if (XrmGetResource(xdb, "dmenu.hibackground", "*", &type, &xval)){
 			colors[SchemeSelHighlight][ColBg] = strdup(xval.addr);
 			colors[SchemeNormHighlight][ColBg] = strdup(xval.addr);
