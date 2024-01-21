@@ -7,7 +7,7 @@ static int min_width = 500;                    /* minimum width when centered */
 static int fuzzy = 1;
 /* -fn option overrides fonts[0]; default X11 font or font set */
 static const char *fonts[] = {
-	"IBM Plex Mono:size=9"
+	"monospace:size=9"
 };
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
 static const char *colors[SchemeLast][2] = {
@@ -18,6 +18,7 @@ static const char *colors[SchemeLast][2] = {
 	[SchemeNormHighlight] = { "#ffc978", "#222222" },
 	[SchemeOut] = { "#000000", "#00ffff" },
 	[SchemeBorder] = { "#000000", "#00ffff" },
+	[SchemeCursor] = { "#222222", "#bbbbbb"},
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
@@ -27,6 +28,19 @@ static unsigned int lines      = 0;
  * for example: " /?\"&[]"
  */
 static const char worddelimiters[] = " ";
+
+/*
+ * -vi option; if nonzero, vi mode is always enabled and can be
+ * accessed with the global_esc keysym + mod mask
+ */
+static unsigned int vi_mode = 1;
+static unsigned int start_mode = 0;			/* mode to use when -vi is passed. 0 = insert mode, 1 = normal mode */
+static Key global_esc = { XK_Escape, 0 };	/* escape key when vi mode is not enabled explicitly */
+static Key quit_keys[] = {
+	/* keysym	modifier */
+	{ XK_q,		0 },
+	{XK_Escape,	0 }
+};
 
 /* Size of the window border */
 static const unsigned int border_width = 1;
